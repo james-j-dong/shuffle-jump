@@ -1,4 +1,3 @@
-import React from "react";
 import ReactPlayer from "react-player";
 
 function MediaPlayer({ url = "https://www.youtube.com/shorts/mcHUXUgHu7E" }) {
