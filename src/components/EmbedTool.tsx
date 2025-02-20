@@ -5,7 +5,7 @@ function EmbedTool() {
 
     return (
         <div className="bg-white p-4 shadow-md rounded-lg w-full max-w-md">
-            <label className="block mb-2 font-medium">Embed Code:</label>
+            <label className="block mb-2 font-medium">Embed Code To Paste:</label>
             <textarea 
                 className="w-full p-2 border rounded bg-gray-100 text-black" 
                 readOnly 
