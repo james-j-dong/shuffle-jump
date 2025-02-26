@@ -30,6 +30,38 @@ function MediaPlayer (videoUrl : string) {
         x : window.innerWidth - defaultWidth - defaultMargin,
         y: window.innerHeight - defaultHeight - defaultMargin
     });
+
+    //user interactions tracker
+    const [size, setSize] = useState({width : defaultWidth, height : defaultHeight});
+    const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(false);
+    const [isClosed, setIsClosed] = useState(false);
+
+    const dragStart = useRef({ x : 0, y : 0 });
+    const resizeStart = useRef({ x : 0, y : 0, width : defaultWidth, height : defaultHeight });
+
+    useEffect(() => {
+        function handleMouseMove(e : MouseEvent) {
+            console.log("mouse moved");
+            if (isDragging) {
+                const deltaX = e.clientX - dragStart.current.x;
+                const deltaY = e.clientY - dragStart.current.y;
+                setPosition(prev => ({ x : prev.x + deltaX, y : prev.y + deltaY }));
+                dragStart.current = { x : e.clientX, y : e.clientY };
+            } else if (isResizing) {
+                const deltaX = e.clientX - resizeStart.current.x;
+                const deltaY = e.clientY - resizeStart.current.y;
+                setSize({
+                    width : Math.max(200, resizeStart.current.width + deltaX), 
+                    height : Math.max(150, resizeStart.current.height + deltaY)
+                });
+            }
+        } 
+
+
+    }, [isDragging, isResizing]);
+
     
 }
 
