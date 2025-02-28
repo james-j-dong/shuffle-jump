@@ -57,12 +57,27 @@ function MediaPlayer (videoUrl : string) {
                     height : Math.max(150, resizeStart.current.height + deltaY)
                 });
             }
-        } 
+        };
 
+        function handleMouseUp() {
+            setIsDragging(false);
+            setIsResizing(false);
+        };
+
+        function cleanupListeners() {
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
+        }
+
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+        return cleanupListeners;
 
     }, [isDragging, isResizing]);
 
-    
+    if (isClosed) {
+        return null;
+    }
 }
 
 export default MediaPlayer;
