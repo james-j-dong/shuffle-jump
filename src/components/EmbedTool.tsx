@@ -1,5 +1,4 @@
-
-
+import MediaPlayer from "./MediaPlayer";
 function createEmedCode(videoUrl : string) {
     const baseUrl = import.meta.env.PROD ? "https://example.com" : "http://localhost:5173";
     const iframeStyle = `
@@ -31,6 +30,14 @@ function createEmedCode(videoUrl : string) {
 
 function EmbedTool() {
     const embedCode = createEmedCode("https://www.youtube.com/shorts/mcHUXUgHu7E");
+//     const embedCode = `<iframe
+//   src="http://localhost:5173/embed?url=https%3A%2F%2Fwww.youtube.com%2Fshorts%2FmcHUXUgHu7E"
+//   width="300"
+//   height="600"
+//   style="border:none; overflow:hidden;"
+//   scrolling="no"
+//   allowfullscreen
+// ></iframe>`
     return (
         <div className="bg-white p-4 shadow-md rounded-lg w-full max-w-md">
             <label className="block mb-2 font-medium text-black">Embed Code To Paste:</label>

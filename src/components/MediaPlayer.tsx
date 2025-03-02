@@ -20,9 +20,13 @@
 //     );
 // }
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-function MediaPlayer (videoUrl : string) {
+interface MediaPlayerProps {
+    videoUrl : string;
+}
+
+function MediaPlayer (MediaPlayerProps : MediaPlayerProps) {
     const defaultWidth = 270;
     const defaultHeight = 584;
     const defaultMargin = 16;
@@ -78,6 +82,103 @@ function MediaPlayer (videoUrl : string) {
     if (isClosed) {
         return null;
     }
-}
+    return (
+        <div
+          style={{
+            position: 'fixed',
+            top: position.y,
+            left: position.x,
+            width: isMinimized ? 200 : size.width,
+            height: isMinimized ? 40 : size.height,
+            background: '#fff',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+            borderRadius: 10,
+            overflow: 'hidden',
+            zIndex: 1000,
+            transition: 'height 0.2s, width 0.2s',
+          }}
+        >
+          {/* Header for dragging and controls */}
+          <div
+            style={{
+              background: '#333',
+              color: '#fff',
+              padding: '8px',
+              cursor: 'move',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+            onMouseDown={(e) => {
+              setIsDragging(true);
+              dragStart.current = { x: e.clientX, y: e.clientY };
+            }}
+          >
+            <span>Video Player</span>
+            <div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent dragging when clicking
+                  setIsMinimized(!isMinimized);
+                }}
+                style={{
+                  marginRight: 8,
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                {isMinimized ? 'Show' : 'Minimize'}
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsClosed(true);
+                }}
+                style={{
+                  background: 'red',
+                  border: 'none',
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                X
+              </button>
+            </div>
+          </div>
+    
+          {/* Main content: Only render the iframe if not minimized */}
+          {!isMinimized && (
+            <div style={{ width: '100%', height: `calc(100% - 40px)`, position: 'relative' }}>
+              <iframe 
+                src={`/embed?url=${encodeURIComponent(MediaPlayerProps.videoUrl)}`}
+                width="100%" 
+                height="100%" 
+                allowFullScreen
+                style={{ display: 'block' }}
+              ></iframe>
+              {/* Resize handle in the bottom-right */}
+              <div
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                  setIsResizing(true);
+                  resizeStart.current = { x: e.clientX, y: e.clientY, width: size.width, height: size.height };
+                }}
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  width: 20,
+                  height: 20,
+                  cursor: 'nwse-resize',
+                  background: 'transparent',
+                }}
+              ></div>
+            </div>
+          )}
+        </div>
+      );
+};
 
 export default MediaPlayer;
